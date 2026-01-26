@@ -1,0 +1,6 @@
+Summary of results
+- Dataset size is small (20 rows), so results are noisy and the model can be unstable.
+- Linear Regression using time-of-day indicators + avg speed + weather (rain, fog) performed poorly.
+- Metrics show weak fit: MAE ≈ 17.05, MSE ≈ 367.15, and R2 = -0.417 (worse than predicting the mean).
+- The predicted vs actual plot shows large scatter from the y=x line, indicating underfitting or missing features.
+- Consider adding more predictors (e.g., distance to travel, weekend) or collecting more data.

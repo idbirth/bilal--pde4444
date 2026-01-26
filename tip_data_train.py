@@ -1,27 +1,13 @@
 import numpy as np
-import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 def main():
-    # Load the provided dataset
-    # Expected columns from lab instructions
-    columns = [
-        "avg. Speed",
-        "Morning",
-        "Afternoon",
-        "Evening",
-        "weekend",
-        "rain",
-        "fog",
-        "distance to travel",
-        "travel time",
-    ]
-    data = pd.read_excel("DatasetLab1.xls", names=columns)
+    # Load the tips dataset
+    data = sns.load_dataset("tips")
 
     # Show heads and shape
     print("Dataset head (default):")
@@ -33,23 +19,19 @@ def main():
 
     # Quick analysis
     print("\nSummary statistics:")
-    print(data.describe(numeric_only=True))
+    print(data[["total_bill", "tip"]].describe())
 
-    # Model development: predict travel time
-    X = data[columns[:-1]].values
-    y = data["travel time"].values
+    # Model development: predict tip from total_bill
+    X = data[["total_bill"]].values
+    y = data["tip"].values
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-
     model = LinearRegression()
-    model.fit(X_train_scaled, y_train)
-    y_pred = model.predict(X_test_scaled)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
 
     print("\nLinear Regression results:")
     print(f"Intercept: {model.intercept_:.4f}")
@@ -60,17 +42,24 @@ def main():
 
     # Plots
     plt.figure(figsize=(8, 5))
-    sns.histplot(data["travel time"], bins=20, kde=True)
-    plt.title("Distribution of Travel Time")
-    plt.xlabel("Travel Time")
+    sns.histplot(data["tip"], bins=20, kde=True)
+    plt.title("Distribution of Tip")
+    plt.xlabel("Tip")
     plt.ylabel("Count")
+    plt.tight_layout()
+
+    plt.figure(figsize=(8, 5))
+    sns.scatterplot(data=data, x="total_bill", y="tip")
+    plt.title("Tip vs Total Bill")
+    plt.xlabel("Total Bill")
+    plt.ylabel("Tip")
     plt.tight_layout()
 
     plt.figure(figsize=(8, 5))
     sns.scatterplot(x=y_test, y=y_pred)
     plt.title("Predicted vs Actual (Test Set)")
-    plt.xlabel("Actual Travel Time")
-    plt.ylabel("Predicted Travel Time")
+    plt.xlabel("Actual Tip")
+    plt.ylabel("Predicted Tip")
     plt.tight_layout()
 
     plt.show()
