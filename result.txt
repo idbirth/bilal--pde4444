@@ -1,6 +1,7 @@
-Summary of results
-- Dataset size is small (20 rows), so results are noisy and the model can be unstable.
-- Linear Regression using time-of-day indicators + avg speed + weather (rain, fog) performed poorly.
-- Metrics show weak fit: MAE ≈ 17.05, MSE ≈ 367.15, and R2 = -0.417 (worse than predicting the mean).
-- The predicted vs actual plot shows large scatter from the y=x line, indicating underfitting or missing features.
-- Consider adding more predictors (e.g., distance to travel, weekend) or collecting more data.
+Summary of results (optimized model)
+- Dataset has 20 rows; results are still noisy but improved after tuning.
+- Best model from CV search: Ridge regression with alpha = 100.0.
+- Metrics improved: MAE = 12.9289, MSE = 215.4511, R2 = 0.1685 (now better than baseline).
+- Coefficients (feature order: Morning, Afternoon, Evening, avg. Speed, rain, fog, weekend, distance to travel):
+  [-0.168, -0.3485, 0.5704, -0.0694, -0.3318, 0.8222, -0.4796, 1.4661]
+- Fit is still modest; more data or feature engineering would likely improve performance.

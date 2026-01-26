@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-01-26T20:14:41",
+  "features": [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "avg. Speed",
+    "rain",
+    "fog",
+    "weekend",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 7,
+  "cv_folds": 5,
+  "best_model": "Lasso",
+  "best_alpha": 1.0,
+  "intercept": 35.00771631375,
+  "coefficients": [
+    -0.0,
+    -0.0,
+    3.581111229690702,
+    -0.07056039804143333,
+    0.07035372736027347,
+    1.4663766846968673,
+    -2.0199897522938937,
+    9.77940059190819
+  ],
+  "metrics": {
+    "mae": 4.143361256872952,
+    "mse": 44.664063079661865,
+    "r2": 0.6093525812467937
+  },
+  "reason": "Different random seed to check split sensitivity."
+}

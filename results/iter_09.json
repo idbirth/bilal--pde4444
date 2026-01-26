@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-01-26T20:14:41",
+  "features": [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "avg. Speed",
+    "rain",
+    "fog",
+    "weekend",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 42,
+  "cv_folds": 3,
+  "best_model": "Ridge",
+  "best_alpha": 1.0,
+  "intercept": 37.056079409375,
+  "coefficients": [
+    -0.05457244424265523,
+    -2.4594493743195214,
+    2.894499960885925,
+    -0.6434033097245697,
+    3.3825029324673554,
+    4.130914128233471,
+    -3.994101714444186,
+    8.535381608141057
+  ],
+  "metrics": {
+    "mae": 5.457472673961714,
+    "mse": 44.44556761918499,
+    "r2": 0.8284676420260879
+  },
+  "reason": "Even fewer folds to test stability."
+}

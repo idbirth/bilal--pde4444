@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-01-26T20:14:40",
+  "features": [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "avg. Speed",
+    "rain",
+    "fog",
+    "weekend",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 42,
+  "cv_folds": 5,
+  "best_model": "Ridge",
+  "best_alpha": 100.0,
+  "intercept": 37.056079409375,
+  "coefficients": [
+    -0.16801350592870332,
+    -0.3484783729055627,
+    0.5704016707362825,
+    -0.06944132542155369,
+    -0.3317601465151097,
+    0.8222204044626514,
+    -0.4795722689902253,
+    1.4661436799151397
+  ],
+  "metrics": {
+    "mae": 12.928887146473256,
+    "mse": 215.4511150625296,
+    "r2": 0.16849216301083114
+  },
+  "reason": "Baseline with all predictors and standard 80/20 split."
+}

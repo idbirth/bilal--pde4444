@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-01-26T20:14:41",
+  "features": [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "avg. Speed",
+    "rain",
+    "fog",
+    "weekend",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 99,
+  "cv_folds": 5,
+  "best_model": "Lasso",
+  "best_alpha": 1.0,
+  "intercept": 35.236296697499995,
+  "coefficients": [
+    0.0,
+    -3.060932830968869,
+    0.0,
+    -0.0,
+    2.4745414334453546,
+    0.014913727408877087,
+    -4.741396378985665,
+    12.464736877792452
+  ],
+  "metrics": {
+    "mae": 7.118938804439186,
+    "mse": 83.49047688279843,
+    "r2": -0.3952962992334159
+  },
+  "reason": "Another seed to gauge variability."
+}

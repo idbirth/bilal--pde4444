@@ -71,7 +71,7 @@ def main():
     ]
     cv = KFold(n_splits=5, shuffle=True, random_state=42)
     search = GridSearchCV(
-        pipeline, param_grid=param_grid, scoring="r2", cv=cv, n_jobs=-1
+        pipeline, param_grid=param_grid, scoring="r2", cv=cv, n_jobs=1
     )
     search.fit(X_train, y_train)
     best_model = search.best_estimator_

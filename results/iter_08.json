@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-01-26T20:14:41",
+  "features": [
+    "Morning",
+    "Afternoon",
+    "Evening",
+    "avg. Speed",
+    "rain",
+    "fog",
+    "weekend",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 42,
+  "cv_folds": 4,
+  "best_model": "Lasso",
+  "best_alpha": 1.0,
+  "intercept": 37.056079409375,
+  "coefficients": [
+    -0.0,
+    -0.0,
+    2.6168977986043265,
+    -0.0,
+    0.0,
+    1.2612802606463114,
+    -1.5078384168380454,
+    9.174353879392863
+  ],
+  "metrics": {
+    "mae": 7.142149580552693,
+    "mse": 63.65299717353098,
+    "r2": 0.7543388625197909
+  },
+  "reason": "Fewer CV folds to reduce variance with tiny dataset."
+}

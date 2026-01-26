@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-01-26T20:14:40",
+  "features": [
+    "avg. Speed",
+    "rain",
+    "fog",
+    "distance to travel"
+  ],
+  "target": "travel time",
+  "test_size": 0.2,
+  "random_state": 42,
+  "cv_folds": 5,
+  "best_model": "Ridge",
+  "best_alpha": 10.0,
+  "intercept": 37.056079409375,
+  "coefficients": [
+    -0.4738478302350655,
+    -0.4157112492367589,
+    1.8438031371070738,
+    6.279212405467565
+  ],
+  "metrics": {
+    "mae": 9.87452089537233,
+    "mse": 121.68236146174249,
+    "r2": 0.5303814642619852
+  },
+  "reason": "Focus on continuous factors + weather; drop time-of-day dummies."
+}
