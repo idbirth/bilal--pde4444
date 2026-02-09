@@ -1,0 +1,39 @@
+=== Task 1: Perceptron (Health) ===
+Accuracy: 0.9700
+
+Classification report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.98      0.98       187
+           1       0.77      0.77      0.77        13
+
+    accuracy                           0.97       200
+   macro avg       0.88      0.88      0.88       200
+weighted avg       0.97      0.97      0.97       200
+
+Confusion matrix:
+[[184   3]
+ [  3  10]]
+[OK] Saved: outputs/health_perceptron_confusion_matrix.png
+
+=== Task 2: SVM (Iris, OVR) ===
+Accuracy: 0.9667
+
+Classification report:
+                 precision    recall  f1-score   support
+
+    Iris-setosa       1.00      1.00      1.00        10
+Iris-versicolor       1.00      0.90      0.95        10
+ Iris-virginica       0.91      1.00      0.95        10
+
+       accuracy                           0.97        30
+      macro avg       0.97      0.97      0.97        30
+   weighted avg       0.97      0.97      0.97        30
+
+Confusion matrix:
+[[10  0  0]
+ [ 0  9  1]
+ [ 0  0 10]]
+[OK] Saved: outputs/iris_svm_confusion_matrix.png
+
+Done.
