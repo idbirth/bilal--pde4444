@@ -1,0 +1,13 @@
+{
+  "iteration": 3,
+  "name": "batch_norm_added",
+  "epochs_requested": 20,
+  "epochs_ran": 5,
+  "best_epoch": 1,
+  "train_accuracy_last": 0.3670886158943176,
+  "val_accuracy_last": 0.09090909361839294,
+  "best_val_accuracy": 0.21212121844291687,
+  "eval_loss": 2.082061290740967,
+  "eval_accuracy": 0.21212121844291687,
+  "elapsed_seconds": 2.59
+}

@@ -1,0 +1,13 @@
+{
+  "iteration": 5,
+  "name": "more_capacity",
+  "epochs_requested": 20,
+  "epochs_ran": 5,
+  "best_epoch": 1,
+  "train_accuracy_last": 0.2405063360929489,
+  "val_accuracy_last": 0.06060606241226196,
+  "best_val_accuracy": 0.09090909361839294,
+  "eval_loss": 2.0843989849090576,
+  "eval_accuracy": 0.09090909361839294,
+  "elapsed_seconds": 3.41
+}

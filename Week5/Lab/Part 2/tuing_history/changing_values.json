@@ -1,0 +1,108 @@
+[
+  {
+    "iteration": 1,
+    "name": "small_baseline",
+    "changes": {
+      "img_height": {
+        "from": null,
+        "to": 128
+      },
+      "img_width": {
+        "from": null,
+        "to": 128
+      },
+      "batch_size": {
+        "from": null,
+        "to": 8
+      },
+      "conv_filters": {
+        "from": null,
+        "to": [
+          16,
+          32,
+          64
+        ]
+      },
+      "dense_units": {
+        "from": null,
+        "to": 64
+      },
+      "dropout_rate": {
+        "from": null,
+        "to": 0.2
+      },
+      "use_batch_norm": {
+        "from": null,
+        "to": false
+      },
+      "use_augmentation": {
+        "from": null,
+        "to": false
+      },
+      "learning_rate": {
+        "from": null,
+        "to": 0.001
+      }
+    }
+  },
+  {
+    "iteration": 2,
+    "name": "with_augmentation",
+    "changes": {
+      "use_augmentation": {
+        "from": false,
+        "to": true
+      }
+    }
+  },
+  {
+    "iteration": 3,
+    "name": "batch_norm_added",
+    "changes": {
+      "use_batch_norm": {
+        "from": false,
+        "to": true
+      }
+    }
+  },
+  {
+    "iteration": 4,
+    "name": "lower_lr",
+    "changes": {
+      "dropout_rate": {
+        "from": 0.2,
+        "to": 0.25
+      },
+      "learning_rate": {
+        "from": 0.001,
+        "to": 0.0005
+      }
+    }
+  },
+  {
+    "iteration": 5,
+    "name": "more_capacity",
+    "changes": {
+      "conv_filters": {
+        "from": [
+          16,
+          32,
+          64
+        ],
+        "to": [
+          32,
+          64,
+          64
+        ]
+      },
+      "dense_units": {
+        "from": 64,
+        "to": 128
+      },
+      "dropout_rate": {
+        "from": 0.25,
+        "to": 0.3
+      }
+    }
+  }
+]

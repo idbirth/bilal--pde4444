@@ -1,0 +1,16 @@
+{
+  "name": "more_capacity",
+  "img_height": 128,
+  "img_width": 128,
+  "batch_size": 8,
+  "conv_filters": [
+    32,
+    64,
+    64
+  ],
+  "dense_units": 128,
+  "dropout_rate": 0.3,
+  "use_batch_norm": true,
+  "use_augmentation": true,
+  "learning_rate": 0.0005
+}
