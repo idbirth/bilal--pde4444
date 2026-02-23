@@ -1,7 +1,7 @@
 [
   {
     "iteration": 1,
-    "name": "small_baseline",
+    "name": "strong_flatten_baseline",
     "changes": {
       "img_height": {
         "from": null,
@@ -18,18 +18,22 @@
       "conv_filters": {
         "from": null,
         "to": [
-          16,
           32,
-          64
+          64,
+          128
         ]
+      },
+      "head_type": {
+        "from": null,
+        "to": "flatten"
       },
       "dense_units": {
         "from": null,
-        "to": 64
+        "to": 256
       },
       "dropout_rate": {
         "from": null,
-        "to": 0.2
+        "to": 0.3
       },
       "use_batch_norm": {
         "from": null,
@@ -42,12 +46,20 @@
       "learning_rate": {
         "from": null,
         "to": 0.001
+      },
+      "early_stopping_patience": {
+        "from": null,
+        "to": 8
+      },
+      "lr_plateau_patience": {
+        "from": null,
+        "to": 4
       }
     }
   },
   {
     "iteration": 2,
-    "name": "with_augmentation",
+    "name": "flatten_with_augmentation",
     "changes": {
       "use_augmentation": {
         "from": false,
@@ -57,7 +69,7 @@
   },
   {
     "iteration": 3,
-    "name": "batch_norm_added",
+    "name": "flatten_batch_norm",
     "changes": {
       "use_batch_norm": {
         "from": false,
@@ -67,10 +79,10 @@
   },
   {
     "iteration": 4,
-    "name": "lower_lr",
+    "name": "flatten_lower_lr",
     "changes": {
       "dropout_rate": {
-        "from": 0.2,
+        "from": 0.3,
         "to": 0.25
       },
       "learning_rate": {
@@ -81,27 +93,19 @@
   },
   {
     "iteration": 5,
-    "name": "more_capacity",
+    "name": "larger_input_global_avg",
     "changes": {
-      "conv_filters": {
-        "from": [
-          16,
-          32,
-          64
-        ],
-        "to": [
-          32,
-          64,
-          64
-        ]
+      "head_type": {
+        "from": "flatten",
+        "to": "global_avg"
       },
       "dense_units": {
-        "from": 64,
+        "from": 256,
         "to": 128
       },
       "dropout_rate": {
         "from": 0.25,
-        "to": 0.3
+        "to": 0.35
       }
     }
   }

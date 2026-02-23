@@ -1,82 +1,97 @@
 [
   {
-    "name": "small_baseline",
-    "img_height": 128,
-    "img_width": 128,
-    "batch_size": 8,
-    "conv_filters": [
-      16,
-      32,
-      64
-    ],
-    "dense_units": 64,
-    "dropout_rate": 0.2,
-    "use_batch_norm": false,
-    "use_augmentation": false,
-    "learning_rate": 0.001
-  },
-  {
-    "name": "with_augmentation",
-    "img_height": 128,
-    "img_width": 128,
-    "batch_size": 8,
-    "conv_filters": [
-      16,
-      32,
-      64
-    ],
-    "dense_units": 64,
-    "dropout_rate": 0.2,
-    "use_batch_norm": false,
-    "use_augmentation": true,
-    "learning_rate": 0.001
-  },
-  {
-    "name": "batch_norm_added",
-    "img_height": 128,
-    "img_width": 128,
-    "batch_size": 8,
-    "conv_filters": [
-      16,
-      32,
-      64
-    ],
-    "dense_units": 64,
-    "dropout_rate": 0.2,
-    "use_batch_norm": true,
-    "use_augmentation": true,
-    "learning_rate": 0.001
-  },
-  {
-    "name": "lower_lr",
-    "img_height": 128,
-    "img_width": 128,
-    "batch_size": 8,
-    "conv_filters": [
-      16,
-      32,
-      64
-    ],
-    "dense_units": 64,
-    "dropout_rate": 0.25,
-    "use_batch_norm": true,
-    "use_augmentation": true,
-    "learning_rate": 0.0005
-  },
-  {
-    "name": "more_capacity",
+    "name": "strong_flatten_baseline",
     "img_height": 128,
     "img_width": 128,
     "batch_size": 8,
     "conv_filters": [
       32,
       64,
-      64
+      128
     ],
-    "dense_units": 128,
+    "head_type": "flatten",
+    "dense_units": 256,
+    "dropout_rate": 0.3,
+    "use_batch_norm": false,
+    "use_augmentation": false,
+    "learning_rate": 0.001,
+    "early_stopping_patience": 8,
+    "lr_plateau_patience": 4
+  },
+  {
+    "name": "flatten_with_augmentation",
+    "img_height": 128,
+    "img_width": 128,
+    "batch_size": 8,
+    "conv_filters": [
+      32,
+      64,
+      128
+    ],
+    "head_type": "flatten",
+    "dense_units": 256,
+    "dropout_rate": 0.3,
+    "use_batch_norm": false,
+    "use_augmentation": true,
+    "learning_rate": 0.001,
+    "early_stopping_patience": 8,
+    "lr_plateau_patience": 4
+  },
+  {
+    "name": "flatten_batch_norm",
+    "img_height": 128,
+    "img_width": 128,
+    "batch_size": 8,
+    "conv_filters": [
+      32,
+      64,
+      128
+    ],
+    "head_type": "flatten",
+    "dense_units": 256,
     "dropout_rate": 0.3,
     "use_batch_norm": true,
     "use_augmentation": true,
-    "learning_rate": 0.0005
+    "learning_rate": 0.001,
+    "early_stopping_patience": 8,
+    "lr_plateau_patience": 4
+  },
+  {
+    "name": "flatten_lower_lr",
+    "img_height": 128,
+    "img_width": 128,
+    "batch_size": 8,
+    "conv_filters": [
+      32,
+      64,
+      128
+    ],
+    "head_type": "flatten",
+    "dense_units": 256,
+    "dropout_rate": 0.25,
+    "use_batch_norm": true,
+    "use_augmentation": true,
+    "learning_rate": 0.0005,
+    "early_stopping_patience": 8,
+    "lr_plateau_patience": 4
+  },
+  {
+    "name": "larger_input_global_avg",
+    "img_height": 128,
+    "img_width": 128,
+    "batch_size": 8,
+    "conv_filters": [
+      32,
+      64,
+      128
+    ],
+    "head_type": "global_avg",
+    "dense_units": 128,
+    "dropout_rate": 0.35,
+    "use_batch_norm": true,
+    "use_augmentation": true,
+    "learning_rate": 0.0005,
+    "early_stopping_patience": 8,
+    "lr_plateau_patience": 4
   }
 ]

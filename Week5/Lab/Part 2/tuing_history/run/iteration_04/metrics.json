@@ -1,13 +1,13 @@
 {
   "iteration": 4,
-  "name": "lower_lr",
+  "name": "flatten_lower_lr",
   "epochs_requested": 20,
-  "epochs_ran": 5,
-  "best_epoch": 1,
-  "train_accuracy_last": 0.29113924503326416,
-  "val_accuracy_last": 0.06060606241226196,
-  "best_val_accuracy": 0.1515151560306549,
-  "eval_loss": 2.084714412689209,
-  "eval_accuracy": 0.1515151560306549,
-  "elapsed_seconds": 2.72
+  "epochs_ran": 11,
+  "best_epoch": 3,
+  "train_accuracy_last": 0.4375,
+  "val_accuracy_last": 0.125,
+  "best_val_accuracy": 0.15625,
+  "eval_loss": 2.2083945274353027,
+  "eval_accuracy": 0.15625,
+  "elapsed_seconds": 7.86
 }

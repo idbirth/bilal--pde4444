@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import os
+import random
 import time
 from pathlib import Path
 
@@ -21,85 +22,150 @@ import matplotlib.pyplot as plt
 def build_search_configs():
     return [
         {
-            "name": "small_baseline",
+            "name": "strong_flatten_baseline",
             "img_height": 128,
             "img_width": 128,
             "batch_size": 8,
-            "conv_filters": [16, 32, 64],
-            "dense_units": 64,
-            "dropout_rate": 0.20,
+            "conv_filters": [32, 64, 128],
+            "head_type": "flatten",
+            "dense_units": 256,
+            "dropout_rate": 0.30,
             "use_batch_norm": False,
             "use_augmentation": False,
             "learning_rate": 0.001,
+            "early_stopping_patience": 8,
+            "lr_plateau_patience": 4,
         },
         {
-            "name": "with_augmentation",
+            "name": "flatten_with_augmentation",
             "img_height": 128,
             "img_width": 128,
             "batch_size": 8,
-            "conv_filters": [16, 32, 64],
-            "dense_units": 64,
-            "dropout_rate": 0.20,
+            "conv_filters": [32, 64, 128],
+            "head_type": "flatten",
+            "dense_units": 256,
+            "dropout_rate": 0.30,
             "use_batch_norm": False,
             "use_augmentation": True,
             "learning_rate": 0.001,
+            "early_stopping_patience": 8,
+            "lr_plateau_patience": 4,
         },
         {
-            "name": "batch_norm_added",
+            "name": "flatten_batch_norm",
             "img_height": 128,
             "img_width": 128,
             "batch_size": 8,
-            "conv_filters": [16, 32, 64],
-            "dense_units": 64,
-            "dropout_rate": 0.20,
+            "conv_filters": [32, 64, 128],
+            "head_type": "flatten",
+            "dense_units": 256,
+            "dropout_rate": 0.30,
             "use_batch_norm": True,
             "use_augmentation": True,
             "learning_rate": 0.001,
+            "early_stopping_patience": 8,
+            "lr_plateau_patience": 4,
         },
         {
-            "name": "lower_lr",
+            "name": "flatten_lower_lr",
             "img_height": 128,
             "img_width": 128,
             "batch_size": 8,
-            "conv_filters": [16, 32, 64],
-            "dense_units": 64,
+            "conv_filters": [32, 64, 128],
+            "head_type": "flatten",
+            "dense_units": 256,
             "dropout_rate": 0.25,
             "use_batch_norm": True,
             "use_augmentation": True,
             "learning_rate": 0.0005,
+            "early_stopping_patience": 8,
+            "lr_plateau_patience": 4,
         },
         {
-            "name": "more_capacity",
+            "name": "larger_input_global_avg",
             "img_height": 128,
             "img_width": 128,
             "batch_size": 8,
-            "conv_filters": [32, 64, 64],
+            "conv_filters": [32, 64, 128],
+            "head_type": "global_avg",
             "dense_units": 128,
-            "dropout_rate": 0.30,
+            "dropout_rate": 0.35,
             "use_batch_norm": True,
             "use_augmentation": True,
             "learning_rate": 0.0005,
+            "early_stopping_patience": 8,
+            "lr_plateau_patience": 4,
         },
     ]
 
 
-def dataset_from_directory(tf, data_dir, img_height, img_width, batch_size, seed=123):
-    train_ds = tf.keras.utils.image_dataset_from_directory(
-        data_dir,
-        validation_split=0.3,
-        subset="training",
-        seed=seed,
-        image_size=(img_height, img_width),
-        batch_size=batch_size,
+def build_stratified_split(data_dir, val_split=0.3, seed=123):
+    rng = random.Random(seed)
+    class_dirs = sorted([d for d in data_dir.iterdir() if d.is_dir()])
+    class_names = [d.name for d in class_dirs]
+
+    train_paths, train_labels = [], []
+    val_paths, val_labels = [], []
+    split_summary = {"train": {}, "val": {}}
+
+    for label_id, class_dir in enumerate(class_dirs):
+        files = sorted([f for f in class_dir.iterdir() if f.is_file()])
+        rng.shuffle(files)
+        if not files:
+            continue
+
+        val_count = int(round(len(files) * val_split))
+        val_count = max(1, val_count)
+        val_count = min(val_count, len(files) - 1)
+
+        class_val = files[:val_count]
+        class_train = files[val_count:]
+
+        train_paths.extend([str(p) for p in class_train])
+        train_labels.extend([label_id] * len(class_train))
+        val_paths.extend([str(p) for p in class_val])
+        val_labels.extend([label_id] * len(class_val))
+
+        split_summary["train"][class_dir.name] = len(class_train)
+        split_summary["val"][class_dir.name] = len(class_val)
+
+    train_pairs = list(zip(train_paths, train_labels))
+    val_pairs = list(zip(val_paths, val_labels))
+    rng.shuffle(train_pairs)
+    rng.shuffle(val_pairs)
+    train_paths, train_labels = zip(*train_pairs)
+    val_paths, val_labels = zip(*val_pairs)
+
+    return {
+        "class_names": class_names,
+        "train_paths": list(train_paths),
+        "train_labels": list(train_labels),
+        "val_paths": list(val_paths),
+        "val_labels": list(val_labels),
+        "split_summary": split_summary,
+    }
+
+
+def dataset_from_paths(tf, split_data, img_height, img_width, batch_size, seed=123):
+    def _load_image(path, label):
+        image = tf.io.read_file(path)
+        image = tf.image.decode_jpeg(image, channels=3)
+        image = tf.image.resize(image, [img_height, img_width])
+        return image, label
+
+    train_ds = tf.data.Dataset.from_tensor_slices(
+        (split_data["train_paths"], split_data["train_labels"])
     )
-    val_ds = tf.keras.utils.image_dataset_from_directory(
-        data_dir,
-        validation_split=0.3,
-        subset="validation",
-        seed=seed,
-        image_size=(img_height, img_width),
-        batch_size=batch_size,
+    train_ds = train_ds.shuffle(
+        len(split_data["train_paths"]), seed=seed, reshuffle_each_iteration=True
     )
+    train_ds = train_ds.map(_load_image, num_parallel_calls=tf.data.AUTOTUNE).batch(batch_size)
+
+    val_ds = tf.data.Dataset.from_tensor_slices(
+        (split_data["val_paths"], split_data["val_labels"])
+    )
+    val_ds = val_ds.map(_load_image, num_parallel_calls=tf.data.AUTOTUNE).batch(batch_size)
+
     return train_ds, val_ds
 
 
@@ -124,7 +190,10 @@ def build_model(tf, num_classes, config):
             layers.append(tf.keras.layers.BatchNormalization())
         layers.append(tf.keras.layers.MaxPooling2D())
 
-    layers.append(tf.keras.layers.GlobalAveragePooling2D())
+    if config.get("head_type", "global_avg") == "flatten":
+        layers.append(tf.keras.layers.Flatten())
+    else:
+        layers.append(tf.keras.layers.GlobalAveragePooling2D())
     layers.append(tf.keras.layers.Dense(config["dense_units"], activation="relu"))
     layers.append(tf.keras.layers.Dropout(config["dropout_rate"]))
     layers.append(tf.keras.layers.Dense(num_classes))
@@ -252,6 +321,9 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
         [to_jsonable_config(cfg) for cfg in build_search_configs()],
     )
 
+    split_data = build_stratified_split(data_dir, val_split=0.3, seed=123)
+    write_json(history_root / "split_summary.json", split_data["split_summary"])
+
     for iteration, config in enumerate(configs, start=1):
         run_dir = runs_dir / f"iteration_{iteration:02d}"
         run_dir.mkdir(parents=True, exist_ok=True)
@@ -268,6 +340,8 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
 
     if init_only:
         print(f"Initialized tuning folders and configs at: {history_root}")
+        print("Stratified split summary:")
+        print(json.dumps(split_data["split_summary"], indent=2))
         return
 
     tf = ensure_tensorflow()
@@ -285,21 +359,27 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
 
         print(f"\n=== Iteration {iteration:02d}: {config['name']} ===")
         print(f"Config: {to_jsonable_config(config)}")
+        print(
+            "Split sizes:",
+            f"train={len(split_data['train_paths'])},",
+            f"val={len(split_data['val_paths'])}",
+        )
 
-        train_ds, val_ds = dataset_from_directory(
+        train_ds, val_ds = dataset_from_paths(
             tf=tf,
-            data_dir=data_dir,
+            split_data=split_data,
             img_height=config["img_height"],
             img_width=config["img_width"],
             batch_size=config["batch_size"],
             seed=123,
         )
 
-        class_names = train_ds.class_names
+        class_names = split_data["class_names"]
         autotune = tf.data.AUTOTUNE
         train_ds = train_ds.cache().shuffle(256, seed=123).prefetch(buffer_size=autotune)
         val_ds = val_ds.cache().prefetch(buffer_size=autotune)
 
+        tf.keras.utils.set_random_seed(123)
         model = build_model(tf=tf, num_classes=len(class_names), config=config)
         (run_dir / "model_summary.txt").write_text(model_summary_text(model), encoding="utf-8")
 
@@ -307,13 +387,13 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
             tf.keras.callbacks.EarlyStopping(
                 monitor="val_accuracy",
                 mode="max",
-                patience=4,
+                patience=config.get("early_stopping_patience", 8),
                 restore_best_weights=True,
             ),
             tf.keras.callbacks.ReduceLROnPlateau(
                 monitor="val_loss",
                 factor=0.5,
-                patience=2,
+                patience=config.get("lr_plateau_patience", 4),
                 min_lr=1e-6,
             ),
         ]
@@ -360,6 +440,7 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
             "img_width": config["img_width"],
             "batch_size": config["batch_size"],
             "conv_filters": "-".join(str(x) for x in config["conv_filters"]),
+            "head_type": config.get("head_type", "global_avg"),
             "dense_units": config["dense_units"],
             "dropout_rate": config["dropout_rate"],
             "use_batch_norm": config["use_batch_norm"],
@@ -390,6 +471,7 @@ def tune_models(base_dir, max_iterations, epochs, init_only=False):
         "img_width",
         "batch_size",
         "conv_filters",
+        "head_type",
         "dense_units",
         "dropout_rate",
         "use_batch_norm",

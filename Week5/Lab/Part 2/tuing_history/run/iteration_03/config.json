@@ -1,16 +1,19 @@
 {
-  "name": "batch_norm_added",
+  "name": "flatten_batch_norm",
   "img_height": 128,
   "img_width": 128,
   "batch_size": 8,
   "conv_filters": [
-    16,
     32,
-    64
+    64,
+    128
   ],
-  "dense_units": 64,
-  "dropout_rate": 0.2,
+  "head_type": "flatten",
+  "dense_units": 256,
+  "dropout_rate": 0.3,
   "use_batch_norm": true,
   "use_augmentation": true,
-  "learning_rate": 0.001
+  "learning_rate": 0.001,
+  "early_stopping_patience": 8,
+  "lr_plateau_patience": 4
 }

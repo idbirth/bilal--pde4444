@@ -1,16 +1,19 @@
 {
-  "name": "more_capacity",
+  "name": "larger_input_global_avg",
   "img_height": 128,
   "img_width": 128,
   "batch_size": 8,
   "conv_filters": [
     32,
     64,
-    64
+    128
   ],
+  "head_type": "global_avg",
   "dense_units": 128,
-  "dropout_rate": 0.3,
+  "dropout_rate": 0.35,
   "use_batch_norm": true,
   "use_augmentation": true,
-  "learning_rate": 0.0005
+  "learning_rate": 0.0005,
+  "early_stopping_patience": 8,
+  "lr_plateau_patience": 4
 }

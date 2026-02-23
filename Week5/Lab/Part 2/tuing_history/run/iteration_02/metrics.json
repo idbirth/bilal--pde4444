@@ -1,13 +1,13 @@
 {
   "iteration": 2,
-  "name": "with_augmentation",
+  "name": "flatten_with_augmentation",
   "epochs_requested": 20,
-  "epochs_ran": 5,
+  "epochs_ran": 9,
   "best_epoch": 1,
-  "train_accuracy_last": 0.1265822798013687,
-  "val_accuracy_last": 0.06060606241226196,
-  "best_val_accuracy": 0.06060606241226196,
-  "eval_loss": 2.090376138687134,
-  "eval_accuracy": 0.06060606241226196,
-  "elapsed_seconds": 1.81
+  "train_accuracy_last": 0.3499999940395355,
+  "val_accuracy_last": 0.1875,
+  "best_val_accuracy": 0.1875,
+  "eval_loss": 2.0789856910705566,
+  "eval_accuracy": 0.1875,
+  "elapsed_seconds": 4.91
 }

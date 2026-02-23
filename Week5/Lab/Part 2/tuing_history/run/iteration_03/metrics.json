@@ -1,13 +1,13 @@
 {
   "iteration": 3,
-  "name": "batch_norm_added",
+  "name": "flatten_batch_norm",
   "epochs_requested": 20,
-  "epochs_ran": 5,
+  "epochs_ran": 9,
   "best_epoch": 1,
-  "train_accuracy_last": 0.3670886158943176,
-  "val_accuracy_last": 0.09090909361839294,
-  "best_val_accuracy": 0.21212121844291687,
-  "eval_loss": 2.082061290740967,
-  "eval_accuracy": 0.21212121844291687,
-  "elapsed_seconds": 2.59
+  "train_accuracy_last": 0.2750000059604645,
+  "val_accuracy_last": 0.125,
+  "best_val_accuracy": 0.125,
+  "eval_loss": 3.5805723667144775,
+  "eval_accuracy": 0.125,
+  "elapsed_seconds": 6.48
 }

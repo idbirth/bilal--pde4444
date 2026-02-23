@@ -20,6 +20,7 @@ MLP on Iris with baseline parameters, then `GridSearchCV` tuning and evaluation.
 Straight conversion of the lab CNN flow using dataset `Week5/Lab/Part 2/D1`.
 - `Part2_CNN_tuned.py`:
 Runs predefined tuning iterations to improve validation accuracy and logs each run.
+Uses a class-balanced stratified split (per class) for fair train/validation evaluation on the very small `D1` dataset.
 
 ## Part 2 Tuning History
 The tuned script writes artifacts in:
@@ -28,6 +29,7 @@ The tuned script writes artifacts in:
 Important structure:
 - `Week5/Lab/Part 2/tuing_history/changing_values.json`
 - `Week5/Lab/Part 2/tuing_history/search_space.json`
+- `Week5/Lab/Part 2/tuing_history/split_summary.json`
 - `Week5/Lab/Part 2/tuing_history/run/iteration_01/config.json`
 - `Week5/Lab/Part 2/tuing_history/run/iteration_01/metrics.json`
 - `Week5/Lab/Part 2/tuing_history/run/iteration_01/history.csv` (created after training)
