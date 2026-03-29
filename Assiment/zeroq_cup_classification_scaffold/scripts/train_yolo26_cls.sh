@@ -36,6 +36,8 @@ EPOCHS="${4:-80}"
 MODEL_INPUT="${2:-yolo26s-cls.pt}"
 PYTHON_BIN="$(pick_python)"
 RUNS_ROOT="${PROJECT_ROOT}/runs/classify"
+MPLCONFIGDIR="${PROJECT_ROOT}/.cache/matplotlib"
+AMP="${AMP:-false}"
 
 if [[ "${MODEL_INPUT##*/}" != *-cls.pt ]]; then
   echo "Expected a classification checkpoint ending with -cls.pt, got: ${MODEL_INPUT}" >&2
@@ -56,14 +58,27 @@ if [[ ! -f "${MODEL}" ]]; then
   MODEL="${MODEL_INPUT}"
 fi
 
+case "${AMP,,}" in
+  1|true|yes|on) PY_AMP="True" ;;
+  0|false|no|off) PY_AMP="False" ;;
+  *)
+    echo "Unsupported AMP value: ${AMP}. Use true/false." >&2
+    exit 1
+    ;;
+esac
+
+mkdir -p "${RUNS_ROOT}" "${MPLCONFIGDIR}"
+
 echo "[INFO] python: ${PYTHON_BIN}"
 echo "[INFO] training classification model from ${MODEL}"
 echo "[INFO] dataset root: ${DATA_ROOT}"
 echo "[INFO] imgsz=${IMGSZ}, epochs=${EPOCHS}"
+echo "[INFO] amp=${PY_AMP}"
 echo "[INFO] Ultralytics online augmentation: disabled"
 echo "[INFO] runs root: ${RUNS_ROOT}"
+echo "[INFO] matplotlib config: ${MPLCONFIGDIR}"
 
-export DATA_ROOT MODEL IMGSZ EPOCHS RUNS_ROOT
+export DATA_ROOT MODEL IMGSZ EPOCHS RUNS_ROOT MPLCONFIGDIR PY_AMP
 
 "${PYTHON_BIN}" - <<'PY'
 import os
@@ -78,6 +93,7 @@ model_path = Path(os.environ["MODEL"])
 imgsz = int(os.environ["IMGSZ"])
 epochs = int(os.environ["EPOCHS"])
 runs_root = Path(os.environ["RUNS_ROOT"])
+amp = os.environ["PY_AMP"] == "True"
 
 
 class NoAugClassificationTrainer(ClassificationTrainer):
@@ -101,5 +117,6 @@ model.train(
     workers=4,
     patience=15,
     project=str(runs_root),
+    amp=amp,
 )
 PY
