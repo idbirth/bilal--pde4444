@@ -117,6 +117,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+If you are using the shared environment created one level above this repo:
+
+```bash
+source ../.venv/bin/activate
+```
+
 ## Workflow
 
 ### 1) Put original images here
@@ -161,7 +167,9 @@ python scripts/split_dataset.py \
 ### 5) Audit the images for duplicates / blur / exposure issues
 
 ```bash
-python scripts/audit_dataset.py --data-root data/processed
+python scripts/audit_dataset.py --data-root data/processed --split train
+python scripts/audit_dataset.py --data-root data/processed --split val
+python scripts/audit_dataset.py --data-root data/processed --split test
 ```
 
 ### 6) Optional: launch FiftyOne for visual dataset review
@@ -181,6 +189,12 @@ For more capacity, try:
 - `yolo26m-cls.pt`
 
 I would **not** start with `yolo26x-cls.pt` for a 400-600 image dataset.
+
+Recommended training order:
+1. Train `yolo26n-cls.pt` first as the stable baseline.
+2. If the other system has enough GPU memory, try `yolo26s-cls.pt`.
+3. Keep the task binary: `defective` vs `non_defective`.
+4. Report final engineering decisions as `FAIL` / `PASS`.
 
 ### 8) Train a scikit-learn baseline
 
@@ -205,6 +219,74 @@ python scripts/infer_yolo26_cls.py \
   --input demo_samples
 ```
 
+## Live stream CLI
+
+Use the live stream script when you want to classify frames from an authenticated website stream and show the engineering decision on screen.
+
+### Form-login stream inference
+
+This is the current setup for the Baslar Labs stream:
+
+```bash
+python scripts/infer_yolo26_cls_stream.py \
+  --model models/PDE4444_T1_best.pt \
+  --stream-url 'https://api.baslarlabs.ae/video_feed' \
+  --auth-mode form \
+  --auth-user 'zeroq' \
+  --auth-password '#@45459xQw' \
+  --insecure \
+  --show
+```
+
+What it does:
+- logs into the HTML form using `username` / `password`
+- opens the `video_feed` endpoint with the authenticated session cookie
+- runs classification on every frame by default
+- overlays `PASS` / `FAIL` on all displayed frames
+- saves one annotated capture every 30 frames to `run_capture/`
+
+### Optional stream CLI flags
+
+```bash
+--frame-stride 1
+--save-every 30
+--capture-dir run_capture
+--timeout 10
+--debug-bytes 4096
+```
+
+### Example saved capture names
+
+```text
+pass_20260329_182455_123456_PDE4444_f000030.jpg
+fail_20260329_182501_654321_PDE4444_f000060.jpg
+```
+
+## CLI quick reference
+
+```bash
+# Dataset preparation
+python scripts/augment_dataset.py --config configs/augment_offline.yaml --input-root data/raw --output-root data/interim/augmented
+python scripts/cleanup_presplit_duplicates.py --input-root data/interim/augmented --output-root data/interim/cleaned
+python scripts/split_dataset.py --input-root data/interim/cleaned --output-root data/processed --train 0.70 --val 0.15 --test 0.15
+
+# Dataset audit
+python scripts/audit_dataset.py --data-root data/processed --split train
+python scripts/audit_dataset.py --data-root data/processed --split val
+python scripts/audit_dataset.py --data-root data/processed --split test
+
+# Training
+python scripts/train_sklearn_baseline.py --data-root data/processed
+bash scripts/train_yolo26_cls.sh data/processed yolo26n-cls.pt 224 80
+
+# Evaluation and demo
+python scripts/evaluate_classification.py --data-root data/processed --predictions runs/classify/train/weights/best.pt --split test
+python scripts/infer_yolo26_cls.py --model runs/classify/train/weights/best.pt --input demo_samples
+
+# Live stream inference
+python scripts/infer_yolo26_cls_stream.py --model models/PDE4444_T1_best.pt --stream-url 'https://api.baslarlabs.ae/video_feed' --auth-mode form --auth-user 'zeroq' --auth-password '#@45459xQw' --insecure --show
+```
+
 ## Practical notes
 
 - Keep `test/` as real images only. Do **not** fill test with synthetic near-duplicates.
@@ -212,6 +294,7 @@ python scripts/infer_yolo26_cls.py \
 - Keep augmentation stronger in training than in validation/test.
 - Review bad predictions in FiftyOne after every training run.
 - In the final report and demo, always show the engineering output as **PASS/FAIL**, even if internal folder names remain `defective` and `non_defective`.
+- Keep at least 5 genuinely unseen samples outside the training pipeline for the final demonstration.
 
 ## Suggested submission structure
 
