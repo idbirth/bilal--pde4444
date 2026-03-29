@@ -159,16 +159,29 @@ This removes:
 
 It also writes a CSV manifest at `data/interim/cleaned/cleanup_report.csv`.
 
-### 4) Split into train/val/test folders
+### 4) Balance the cleaned dataset
+
+This step randomly undersamples the majority class so it matches the cleaned `non_defective` image count.
+
+```bash
+python scripts/balance_cleaned_dataset.py \
+  --input-root data/interim/cleaned \
+  --output-root data/interim/balanced \
+  --reference-class non_defective
+```
+
+It also writes a CSV manifest at `data/interim/balanced/balance_report.csv`.
+
+### 5) Split into train/val/test folders
 
 ```bash
 python scripts/split_dataset.py \
-  --input-root data/interim/cleaned \
+  --input-root data/interim/balanced \
   --output-root data/processed \
   --train 0.70 --val 0.15 --test 0.15
 ```
 
-### 5) Audit the images for duplicates / blur / exposure issues
+### 6) Audit the images for duplicates / blur / exposure issues
 
 ```bash
 python scripts/audit_dataset.py --data-root data/processed --split train
@@ -176,13 +189,13 @@ python scripts/audit_dataset.py --data-root data/processed --split val
 python scripts/audit_dataset.py --data-root data/processed --split test
 ```
 
-### 6) Optional: launch FiftyOne for visual dataset review
+### 7) Optional: launch FiftyOne for visual dataset review
 
 ```bash
 python scripts/launch_fiftyone.py --data-root data/processed
 ```
 
-### 7) Train YOLO26 classification
+### 8) Train YOLO26 classification
 
 ```bash
 bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
@@ -202,13 +215,13 @@ Recommended training order:
 3. Keep the task binary: `defective` vs `non_defective`.
 4. Report final engineering decisions as `FAIL` / `PASS`.
 
-### 8) Train a scikit-learn baseline
+### 9) Train a scikit-learn baseline
 
 ```bash
 python scripts/train_sklearn_baseline.py --data-root data/processed
 ```
 
-### 9) Export quantitative results for the report
+### 10) Export quantitative results for the report
 
 ```bash
 python scripts/evaluate_classification.py \
@@ -217,7 +230,7 @@ python scripts/evaluate_classification.py \
   --split test
 ```
 
-### 10) Run a demo prediction on new samples
+### 11) Run a demo prediction on new samples
 
 ```bash
 python scripts/infer_yolo26_cls.py \
@@ -274,7 +287,8 @@ fail_20260329_182501_654321_PDE4444_f000060.jpg
 # Dataset preparation
 python scripts/augment_dataset.py --config configs/augment_offline.yaml --input-root data/raw --output-root data/interim/augmented
 python scripts/cleanup_presplit_duplicates.py --input-root data/interim/augmented --output-root data/interim/cleaned
-python scripts/split_dataset.py --input-root data/interim/cleaned --output-root data/processed --train 0.70 --val 0.15 --test 0.15
+python scripts/balance_cleaned_dataset.py --input-root data/interim/cleaned --output-root data/interim/balanced --reference-class non_defective
+python scripts/split_dataset.py --input-root data/interim/balanced --output-root data/processed --train 0.70 --val 0.15 --test 0.15
 
 # Dataset audit
 python scripts/audit_dataset.py --data-root data/processed --split train

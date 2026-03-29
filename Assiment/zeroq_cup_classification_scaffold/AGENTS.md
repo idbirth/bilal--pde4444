@@ -39,7 +39,8 @@ The submission must stay aligned to a **single** quality rule and end in a **PAS
 ```bash
 python scripts/augment_dataset.py --config configs/augment_offline.yaml --input-root data/raw --output-root data/interim/augmented
 python scripts/cleanup_presplit_duplicates.py --input-root data/interim/augmented --output-root data/interim/cleaned
-python scripts/split_dataset.py --input-root data/interim/cleaned --output-root data/processed --train 0.70 --val 0.15 --test 0.15
+python scripts/balance_cleaned_dataset.py --input-root data/interim/cleaned --output-root data/interim/balanced --reference-class non_defective
+python scripts/split_dataset.py --input-root data/interim/balanced --output-root data/processed --train 0.70 --val 0.15 --test 0.15
 python scripts/audit_dataset.py --data-root data/processed
 python scripts/train_sklearn_baseline.py --data-root data/processed
 bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
