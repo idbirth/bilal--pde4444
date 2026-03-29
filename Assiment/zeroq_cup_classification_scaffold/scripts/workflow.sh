@@ -7,8 +7,12 @@ python scripts/augment_dataset.py \
   --input-root data/raw \
   --output-root data/interim/augmented
 
-python scripts/split_dataset.py \
+python scripts/cleanup_presplit_duplicates.py \
   --input-root data/interim/augmented \
+  --output-root data/interim/cleaned
+
+python scripts/split_dataset.py \
+  --input-root data/interim/cleaned \
   --output-root data/processed \
   --train 0.70 --val 0.15 --test 0.15
 

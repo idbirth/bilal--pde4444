@@ -1,0 +1,6 @@
+sample_id,ground_truth_class,expected_decision,predicted_class,predicted_decision,correct,notes
+1,non_defective,PASS,,,,
+2,defective,FAIL,,,,
+3,non_defective,PASS,,,,
+4,defective,FAIL,,,,
+5,non_defective,PASS,,,,
