@@ -141,6 +141,10 @@ python scripts/augment_dataset.py \
   --output-root data/interim/augmented
 ```
 
+Current config:
+- writes augmented images at `512x512`
+- uses deterministic rotation sweep augmentation from `0` to `359` degrees
+
 ### 3) Clean duplicates before splitting
 
 ```bash
@@ -183,6 +187,9 @@ python scripts/launch_fiftyone.py --data-root data/processed
 ```bash
 bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
 ```
+
+This trains the classifier at `512x512` image size.
+The training script disables Ultralytics online augmentation so training uses the offline-augmented dataset as-is.
 
 For more capacity, try:
 - `yolo26m-cls.pt`
