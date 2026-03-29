@@ -2,7 +2,7 @@
 1st_validation_training/
 .venv/
 .pytest_cache/
-
+runs/
 **/__pycache__/
 *.py[cod]
 
