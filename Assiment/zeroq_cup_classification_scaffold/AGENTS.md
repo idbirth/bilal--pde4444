@@ -42,7 +42,7 @@ python scripts/cleanup_presplit_duplicates.py --input-root data/interim/augmente
 python scripts/split_dataset.py --input-root data/interim/cleaned --output-root data/processed --train 0.70 --val 0.15 --test 0.15
 python scripts/audit_dataset.py --data-root data/processed
 python scripts/train_sklearn_baseline.py --data-root data/processed
-bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
 python scripts/evaluate_classification.py --data-root data/processed --predictions runs/classify/train/weights/best.pt --split test
 python scripts/infer_yolo26_cls.py --model runs/classify/train/weights/best.pt --input demo_samples
 ```

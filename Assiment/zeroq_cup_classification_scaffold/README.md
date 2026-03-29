@@ -181,7 +181,7 @@ python scripts/launch_fiftyone.py --data-root data/processed
 ### 7) Train YOLO26 classification
 
 ```bash
-bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
 ```
 
 For more capacity, try:
@@ -276,7 +276,7 @@ python scripts/audit_dataset.py --data-root data/processed --split test
 
 # Training
 python scripts/train_sklearn_baseline.py --data-root data/processed
-bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
 
 # Evaluation and demo
 python scripts/evaluate_classification.py --data-root data/processed --predictions runs/classify/train/weights/best.pt --split test

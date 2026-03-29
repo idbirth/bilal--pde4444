@@ -3,7 +3,7 @@ set -euo pipefail
 
 DATA_ROOT="${1:-data/processed}"
 MODEL="${2:-yolo26s-cls.pt}"
-IMGSZ="${3:-224}"
+IMGSZ="${3:-512}"
 EPOCHS="${4:-80}"
 
 python - <<PY

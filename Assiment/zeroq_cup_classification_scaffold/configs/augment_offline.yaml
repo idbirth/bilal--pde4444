@@ -1,6 +1,6 @@
 seed: 42
 image_ext: ".jpg"
-target_size: [224, 224] # size to which images will be resized before augmentation
+target_size: [512, 512] # size to which images will be resized before augmentation
 classes:
   defective:
     min_output_images: 250 

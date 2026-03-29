@@ -18,4 +18,4 @@ python scripts/split_dataset.py \
 
 python scripts/audit_dataset.py --data-root data/processed
 python scripts/launch_fiftyone.py --data-root data/processed
-bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 512 80
