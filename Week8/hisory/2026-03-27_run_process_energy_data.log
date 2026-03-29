@@ -1,0 +1,14 @@
+Your selected dataframe has 60 columns.
+There are 46 columns that have missing values.
+We will remove 11 columns.
+
+Saved files:
+- processed_energy_data.csv
+- no_score.csv
+- training_features.csv
+- testing_features.csv
+- training_labels.csv
+- testing_labels.csv
+Processed data shape: (11319, 65)
+Rows with score: (9461, 65)
+Rows without score: (1858, 65)

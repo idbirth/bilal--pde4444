@@ -1,0 +1,8 @@
+file,rows,columns
+Energy_Data.csv,11746,60
+processed_energy_data.csv,11319,65
+no_score.csv,1858,65
+training_features.csv,6622,64
+testing_features.csv,2839,64
+training_labels.csv,6622,1
+testing_labels.csv,2839,1
