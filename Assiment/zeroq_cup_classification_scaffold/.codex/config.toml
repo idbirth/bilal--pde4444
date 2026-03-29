@@ -1,0 +1,22 @@
+model = "gpt-5.4"
+
+[project]
+name = "zeroq-cup-classification"
+
+[sandbox_workspace_write]
+network_access = true
+
+[tools]
+web_search = true
+
+# Keep defaults conservative. Tighten or loosen per your trust level.
+[approval_policy]
+default = "on-request"
+
+[env]
+PYTHONUNBUFFERED = "1"
+PIP_DISABLE_PIP_VERSION_CHECK = "1"
+
+# Notes:
+# - Codex also supports environment-specific setup scripts in the app/web UI.
+# - Keep repo-local guidance in AGENTS.md so the agent knows the right commands.
