@@ -1,0 +1,182 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue
+}
+
+\title{PDE4444 Visual Quality Inspection Report\\Cup Surface Defect Classification}
+\author{Student Name: \underline{\hspace{5cm}}}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{1. Problem Definition and Ground Truth}
+This project implements a visual quality inspection system for cups using a single camera image and a binary machine-learning decision. The selected inspection rule is \textbf{visible surface defect present or absent}. This keeps the submission aligned to one clear engineering rule and one final decision per image.
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PASS} = cup is \texttt{non\_defective}
+  \item \textbf{FAIL} = cup is \texttt{defective}
+\end{itemize}
+
+Ground truth labels were assigned by manual inspection under a fixed capture setup. The intended deployment flow is: object placed in inspection area $\rightarrow$ image captured $\rightarrow$ classifier predicts \texttt{defective}/\texttt{non\_defective} $\rightarrow$ system maps output to \textbf{FAIL}/\textbf{PASS}.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.88\linewidth}{\centering Add final inspection-area or stream screenshot here before submission.}}
+\caption{Optional figure slot for the fixed inspection setup or live stream interface.}
+\end{figure}
+
+\section*{2. Model Design and Training}
+\subsection*{Dataset}
+The dataset uses two raw classes: \texttt{defective} and \texttt{non\_defective}. Augmentation was applied offline and cleaned before splitting in order to reduce exact and near-duplicate samples.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrr}
+\toprule
+\textbf{Stage / Split} & \textbf{Defective} & \textbf{Non-defective} \\
+\midrule
+Raw captures & 67 & 7 \\
+Cleaned pre-split dataset & 340 & 192 \\
+Train split & 241 & 139 \\
+Validation split & 46 & 29 \\
+Test split & 53 & 24 \\
+\bottomrule
+\end{tabular}
+\caption{Dataset counts after augmentation, presplit cleanup, and source-group splitting.}
+\end{table}
+
+The split ratio was 70/15/15 by source group in order to reduce leakage from augmented siblings. This matters because multiple augmented samples were derived from the same original source image.
+
+\subsection*{Models}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Main model}: YOLO26 image classification with pretrained weights (\texttt{yolo26n-cls.pt})
+  \item \textbf{Baseline model}: HOG features with Logistic Regression
+\end{itemize}
+
+Training settings for the main model were:
+\begin{itemize}[leftmargin=*]
+  \item image size: 224
+  \item epochs: 80
+  \item batch size: 16
+  \item patience: 15
+  \item pretrained initialization enabled
+\end{itemize}
+
+\subsection*{Training loop pseudo-code}
+\begin{verbatim}
+load train and validation datasets
+initialize pretrained classification model
+for epoch in range(num_epochs):
+    model.train()
+    for images, labels in train_loader:
+        predictions = model(images)
+        loss = criterion(predictions, labels)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    with no_grad():
+        run validation predictions
+        compute validation metrics
+save best model weights
+\end{verbatim}
+
+\section*{3. Quantitative Results}
+\subsection*{Validation and baseline summary}
+The YOLO26 model reached a best validation top-1 accuracy of \textbf{96.0\%} at epoch 10 in the first validation run. The HOG + Logistic Regression baseline reached \textbf{79.0\%} accuracy on the validation split, so the CNN classifier was clearly the stronger approach.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Split} & \textbf{Accuracy} & \textbf{Macro Precision} & \textbf{Macro F1} \\
+\midrule
+HOG + Logistic Regression & Validation & 0.790 & 0.800 & 0.750 \\
+YOLO26n classifier & Test & 0.896 & 0.872 & 0.884 \\
+\bottomrule
+\end{tabular}
+\caption{Baseline sanity check versus final YOLO classifier.}
+\end{table}
+
+\subsection*{Final test-set results}
+The saved best model (\texttt{models/PDE4444\_T1\_best.pt}) was evaluated on the held-out test split using the project evaluation script. The resulting report was:
+
+\begin{itemize}[leftmargin=*]
+  \item Accuracy: 0.8961
+  \item Macro precision: 0.8724
+  \item Macro recall: 0.9017
+  \item Macro F1-score: 0.8839
+  \item Weighted F1-score: 0.8981
+\end{itemize}
+
+Per-class test performance:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{non\_defective} (PASS): precision 0.7857, recall 0.9167, F1 0.8462
+  \item \texttt{defective} (FAIL): precision 0.9592, recall 0.8868, F1 0.9216
+\end{itemize}
+
+Confusion matrix (rows=true, cols=pred):
+\[
+\begin{bmatrix}
+22 & 2 \\
+6 & 47
+\end{bmatrix}
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../1st_validation_training/confusion_matrix.png}
+\caption{Confusion matrix from the first validation training run.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{../1st_validation_training/results.png}
+\caption{Training and validation curves from the YOLO26 classification run.}
+\end{figure}
+
+\section*{4. Failure Cases and Limitations}
+The model is usable for the PASS/FAIL requirement, but the current dataset still has important limitations.
+
+\begin{itemize}[leftmargin=*]
+  \item The biggest limitation is the low diversity of real PASS examples: only 7 raw \texttt{non\_defective} source groups were available.
+  \item The test confusion matrix shows 6 defective cups predicted as PASS, which is the more critical failure mode for quality inspection.
+  \item Likely causes include glare, low-contrast defects, unusual cup pose, and insufficient real-world variation in the non-defective class.
+  \item Augmentation improved volume, but synthetic diversity does not fully replace additional real captures.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{../1st_validation_training/val_batch0_pred.jpg}
+\caption{Example validation predictions from the training run.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.88\linewidth}{\centering Add one or two final failure-case screenshots here before submission.}}
+\caption{Optional figure slot for selected false PASS / false FAIL examples.}
+\end{figure}
+
+\subsection*{Final engineering output}
+The report and demo should always present the model output as an engineering decision:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{non\_defective} $\rightarrow$ \textbf{PASS}
+  \item \texttt{defective} $\rightarrow$ \textbf{FAIL}
+\end{itemize}
+
+For the final demonstration, at least 5 genuinely unseen samples should be kept outside the training pipeline and evaluated with the same PASS/FAIL mapping.
+
+\end{document}

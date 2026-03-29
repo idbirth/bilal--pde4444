@@ -29,3 +29,5 @@ zeroq_cup_classification_scaffold/data/**
 !zeroq_cup_classification_scaffold/data/processed/test/defective/
 !zeroq_cup_classification_scaffold/data/processed/test/non_defective/
 !zeroq_cup_classification_scaffold/data/**/.gitkeep
+
+run_capture/

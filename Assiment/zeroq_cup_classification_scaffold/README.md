@@ -181,18 +181,17 @@ python scripts/launch_fiftyone.py --data-root data/processed
 ### 7) Train YOLO26 classification
 
 ```bash
-bash scripts/train_yolo26_cls.sh data/processed yolo26n-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
 ```
 
 For more capacity, try:
-- `yolo26s-cls.pt`
 - `yolo26m-cls.pt`
 
 I would **not** start with `yolo26x-cls.pt` for a 400-600 image dataset.
 
 Recommended training order:
-1. Train `yolo26n-cls.pt` first as the stable baseline.
-2. If the other system has enough GPU memory, try `yolo26s-cls.pt`.
+1. Train `yolo26s-cls.pt` first as the default working model.
+2. If the other system has enough GPU memory, try `yolo26m-cls.pt`.
 3. Keep the task binary: `defective` vs `non_defective`.
 4. Report final engineering decisions as `FAIL` / `PASS`.
 
@@ -277,7 +276,7 @@ python scripts/audit_dataset.py --data-root data/processed --split test
 
 # Training
 python scripts/train_sklearn_baseline.py --data-root data/processed
-bash scripts/train_yolo26_cls.sh data/processed yolo26n-cls.pt 224 80
+bash scripts/train_yolo26_cls.sh data/processed yolo26s-cls.pt 224 80
 
 # Evaluation and demo
 python scripts/evaluate_classification.py --data-root data/processed --predictions runs/classify/train/weights/best.pt --split test

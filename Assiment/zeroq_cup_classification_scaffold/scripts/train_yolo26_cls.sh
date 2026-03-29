@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DATA_ROOT="${1:-data/processed}"
-MODEL="${2:-yolo26n-cls.pt}"
+MODEL="${2:-yolo26s-cls.pt}"
 IMGSZ="${3:-224}"
 EPOCHS="${4:-80}"
 
