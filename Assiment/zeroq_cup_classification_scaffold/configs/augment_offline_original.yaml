@@ -1,0 +1,69 @@
+seed: 42
+image_ext: ".jpg"
+target_size: [224, 224]
+classes:
+  defective:
+    min_output_images: 250
+    per_source_variants: 6
+    pipeline:
+      resize_first: true
+      transforms:
+        - name: Affine
+          p: 0.8
+          rotate: [-10, 10]
+          scale: [0.95, 1.05]
+          translate_percent: [-0.04, 0.04]
+          shear: [-3, 3]
+        - name: HorizontalFlip
+          p: 0.5
+        - name: RandomBrightnessContrast
+          p: 0.7
+          brightness_limit: [-0.15, 0.15]
+          contrast_limit: [-0.15, 0.15]
+        - name: HueSaturationValue
+          p: 0.25
+          hue_shift_limit: 5
+          sat_shift_limit: 10
+          val_shift_limit: 8
+        - name: GaussianBlur
+          p: 0.15
+          blur_limit: [3, 5]
+        - name: MotionBlur
+          p: 0.10
+          blur_limit: [3, 5]
+        - name: GaussNoise
+          p: 0.12
+          std_range: [0.01, 0.03]
+        - name: CoarseDropout
+          p: 0.08
+          num_holes_range: [1, 2]
+          hole_height_range: [0.02, 0.05]
+          hole_width_range: [0.02, 0.05]
+  non_defective:
+    min_output_images: 250
+    per_source_variants: 5
+    pipeline:
+      resize_first: true
+      transforms:
+        - name: Affine
+          p: 0.9
+          rotate: [-18, 18]
+          scale: [0.92, 1.08]
+          translate_percent: [-0.05, 0.05]
+          shear: [-5, 5]
+        - name: HorizontalFlip
+          p: 0.5
+        - name: RandomBrightnessContrast
+          p: 0.65
+          brightness_limit: [-0.18, 0.18]
+          contrast_limit: [-0.18, 0.18]
+        - name: Perspective
+          p: 0.20
+          scale: [0.02, 0.05]
+        - name: GaussNoise
+          p: 0.08
+          std_range: [0.01, 0.02]
+        - name: Sharpen
+          p: 0.10
+          alpha: [0.1, 0.25]
+          lightness: [0.8, 1.1]

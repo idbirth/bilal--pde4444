@@ -71,3 +71,42 @@ A history/log folder is maintained at:
 - `Week8/hisory/`
 
 This stores run logs and change summaries so future agents can trace what was done.
+
+## Week 8 and Week 9 Integration
+Week 9 work was added as a **follow-up stage to Week 8**, so the flow is now:
+
+1. Week 8 prepares and cleans data (`process_energy_data.py` and generated CSV outputs).
+2. Week 9 uses a structured script pipeline for model experiments and reporting.
+3. Results are stored in one place for reproducibility and handoff.
+
+### Integration folder
+- `Week8/Follow_UP_Week9/`
+- `Week8/Follow_UP_Week9/scripts/`
+- `Week8/Follow_UP_Week9/output/`
+
+### Integration purpose
+- Keep Week 9 automation next to Week 8 outputs, so preprocessing and modeling are linked.
+- Standardize experiment steps (split, train, evaluate, inference) as scripts.
+- Keep logs/reports/predictions in a single output tree for easy tracking.
+
+### Scripts included
+1. `Week8/Follow_UP_Week9/scripts/split_dataset.py`
+- Prepares train/validation/test data partitions.
+
+2. `Week8/Follow_UP_Week9/scripts/train_yolo_classify.py`
+- Runs classification training as the Week 9 model step.
+
+3. `Week8/Follow_UP_Week9/scripts/evaluate_yolo_classify.py`
+- Runs evaluation and writes reports/metrics files.
+
+4. `Week8/Follow_UP_Week9/scripts/infer_yolo_classify.py`
+- Runs inference and exports prediction results.
+
+5. `Week8/Follow_UP_Week9/scripts/run_week9_pipeline.sh`
+- Runs the end-to-end Week 9 pipeline in order.
+
+### Output policy
+All Week 9 follow-up outputs are centralized under:
+- `Week8/Follow_UP_Week9/output/`
+
+This includes run artifacts, reports, inference outputs, and pipeline logs.
