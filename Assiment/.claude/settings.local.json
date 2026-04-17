@@ -4,7 +4,8 @@
       "Bash(python3 -c ' *)",
       "Bash(/opt/anaconda3/envs/sess1/bin/python -m pip list)",
       "Bash(/Users/bilalbaslar/Documents/MDX/PDE4444/Assiment/.venv/bin/python -m pip list)",
-      "Bash(chmod +x /Users/bilalbaslar/Documents/MDX/PDE4444/Assiment/defect_classification_stack/run.sh)"
+      "Bash(chmod +x /Users/bilalbaslar/Documents/MDX/PDE4444/Assiment/defect_classification_stack/run.sh)",
+      "Bash(python3 -c \"import torch; print\\('MPS:', torch.backends.mps.is_available\\(\\)\\); print\\('CUDA:', torch.cuda.is_available\\(\\)\\)\")"
     ]
   }
 }

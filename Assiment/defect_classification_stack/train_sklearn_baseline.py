@@ -62,7 +62,7 @@ def train_with_predefined_split(
         estimator=estimator,
         param_distributions=param_distributions,
         n_iter=n_iter,
-        scoring="f1",
+        scoring="f1_macro",
         cv=ps,
         verbose=1,
         random_state=seed,
@@ -75,12 +75,13 @@ def train_with_predefined_split(
 
 def evaluate_and_save(name: str, search, X_test, y_test, class_names, output_dir: Path) -> Metrics:
     y_pred = search.predict(X_test)
+    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
     metrics = Metrics(
         model_name=name,
-        accuracy=float((y_pred == y_test).mean()),
-        precision=float(pd.Series(y_pred).where(pd.Series(y_test) == 1).notna().sum() / max((pd.Series(y_pred) == 1).sum(), 1)),
-        recall=float(((y_pred == 1) & (y_test == 1)).sum() / max((y_test == 1).sum(), 1)),
-        f1=float((2 * (((y_pred == 1) & (y_test == 1)).sum())) / max((2 * ((y_pred == 1) & (y_test == 1)).sum()) + ((y_pred == 1) & (y_test == 0)).sum() + ((y_pred == 0) & (y_test == 1)).sum(), 1)),
+        accuracy=float(accuracy_score(y_test, y_pred)),
+        precision=float(precision_score(y_test, y_pred, zero_division=0)),
+        recall=float(recall_score(y_test, y_pred, zero_division=0)),
+        f1=float(f1_score(y_test, y_pred, zero_division=0)),
     )
 
     model_dir = ensure_dir(output_dir / name)
