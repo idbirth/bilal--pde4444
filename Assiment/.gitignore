@@ -31,3 +31,6 @@ zeroq_cup_classification_scaffold/data/**
 !zeroq_cup_classification_scaffold/data/**/.gitkeep
 
 run_capture/
+
+.clanude/
+
