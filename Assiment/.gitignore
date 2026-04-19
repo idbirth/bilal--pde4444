@@ -1,5 +1,6 @@
 .DS_Store
 1st_validation_training/
+*.zip
 
 # Local runtimes and caches. These can contain binaries over GitHub's
 # 100 MB per-file limit and should never be committed.
