@@ -1,10 +1,18 @@
 .DS_Store
 1st_validation_training/
+
+# Local runtimes and caches. These can contain binaries over GitHub's
+# 100 MB per-file limit and should never be committed.
 .venv/
 .pytest_cache/
 
 **/__pycache__/
 *.py[cod]
+
+# Local report build artefacts
+*.rtfd/
+Main_Docs/.tmp_report*
+Main_Docs/__pycache__/
 
 zeroq_cup_classification_scaffold/data/**
 !zeroq_cup_classification_scaffold/data/
@@ -32,5 +40,5 @@ zeroq_cup_classification_scaffold/data/**
 
 run_capture/
 
-.clanude/
-
+# Local Claude config
+.claude/settings.local.json
